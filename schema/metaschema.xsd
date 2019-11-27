@@ -167,11 +167,14 @@
         the field being defined. When a flag-name is provided, indicates that the value of the field
        is to be labeled in the JSON with the value of the flag.</xs:documentation>
     </xs:annotation>
-    <xs:complexType mixed="true">
-      <xs:attribute name="flag-name" type="xs:NCName"/>
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:NCName">
+          <xs:attribute name="flag-name" type="xs:NCName"/>
+        </xs:extension>
+      </xs:simpleContent>
     </xs:complexType>
   </xs:element>
-
   <xs:element name="define-flag">
     <xs:annotation>
       <xs:documentation>A data point to be expressed as an attribute in the XML or a name/value pair
@@ -247,22 +250,15 @@
       <xs:attribute name="module" type="xs:anyURI"/>
     </xs:complexType>
   </xs:element>
-  <xs:element name="schema-name">
+  <xs:element name="schema-name" type="xs:string">
     <xs:annotation>
       <xs:documentation>The name of the information model to be represented by derived schemas.</xs:documentation>
     </xs:annotation>
-    <xs:complexType mixed="true">
-      <xs:choice maxOccurs="unbounded">
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:code"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:q"/>
-      </xs:choice>
-    </xs:complexType>
   </xs:element>
-  <xs:element name="schema-version">
+  <xs:element name="schema-version" type="xs:string">
     <xs:annotation>
       <xs:documentation>The version of the information model to be represented by derived schemas.</xs:documentation>
     </xs:annotation>
-    <xs:complexType mixed="true"/>
   </xs:element>
   <xs:element name="short-name" type="xs:NCName">
     <xs:annotation>
