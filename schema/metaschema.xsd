@@ -87,6 +87,7 @@
         />
       </xs:sequence>
       <xs:attribute name="as-type" type="m:field-types" default="string"/>
+      <!-- TODO: change "collapsible" to "in-json-collapse" or something similar -->
       <xs:attribute name="collapsible" type="m:boolean" default="yes"/>
       <xs:attribute name="name" use="required" type="xs:NCName"/>
       <xs:attribute name="module" type="xs:anyURI"/>
