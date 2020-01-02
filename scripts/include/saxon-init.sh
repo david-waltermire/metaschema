@@ -9,6 +9,11 @@ if [[ -z "$SAXON_HOME" ]]; then
         echo -e "${P_ERROR}SAXON_VERSION is not set or is empty.${P_END} ${P_INFO}Please set SAXON_VERSION to indicate the library version or SAXON_HOME to point to the location of the Saxon library.${P_END}"
     fi
     SAXON_HOME=~/.m2/repository/net/sf/saxon/Saxon-HE/$SAXON_VERSION
+
+    if [ ! -f "$SAXON_HOME" ]; then
+        echo -e "${P_ERROR}SAXON_HOME is '${P_END}${SAXON_HOME}${P_ERROR}', which does not exist.${P_END}"
+        exit 1
+    fi
 fi
 
 # ( set -o posix ; set )
