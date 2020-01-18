@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<METASCHEMA xmlns="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+    xmlns:binding="http://csrc.nist.gov/ns/oscal/metaschema-binding/1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://csrc.nist.gov/ns/oscal/metaschema/1.0 metaschema.xsd http://csrc.nist.gov/ns/oscal/metaschema-binding/1.0 metaschema-binding.xsd"
+    root="parent">
+    <schema-name>example</schema-name>
+    <short-name>example</short-name>
+    <namespace>http://csrc.nist.gov/ns/metaschema/example/1.0</namespace>
+    <extensions>
+        <binding:model-binding-configuration>
+            <binding:java package-name="gov.nist.example"/>
+        </binding:model-binding-configuration>        
+    </extensions>
+
+    <define-assembly name="parent">
+        <formal-name>Parent</formal-name>
+        <description>A parent element</description>
+        <extensions>
+        </extensions>
+    </define-assembly>
+</METASCHEMA>

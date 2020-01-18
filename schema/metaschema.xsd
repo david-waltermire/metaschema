@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  elementFormDefault="qualified"
-  xmlns:oscal="http://csrc.nist.gov/ns/oscal/1.0"
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
   xmlns:m="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
-  targetNamespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0">
+  targetNamespace="http://csrc.nist.gov/ns/oscal/metaschema/1.0"
+  xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" vc:minVersion="1.0" vc:maxVersion="1.1">
 
   <!-- Import any OSCAL schemas needed for samples... -->
   <!--<xs:import namespace="http://csrc.nist.gov/ns/oscal/1.0"
@@ -19,6 +18,13 @@
         <xs:element ref="m:schema-version" minOccurs="0"/>
         <xs:element ref="m:short-name"/>
         <xs:element ref="m:namespace" minOccurs="1"/>
+        <xs:element name="extensions" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="m:model-extension" maxOccurs="unbounded"/>  
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
         <xs:element ref="m:remarks" minOccurs="0"/>
         <xs:choice maxOccurs="unbounded">
           <xs:element ref="m:import"/>
@@ -32,6 +38,18 @@
       <xs:attribute name="module" type="xs:anyURI"/>
     </xs:complexType>
   </xs:element>
+
+  <xs:element name="model-extension" type="m:extensionType" abstract="true"/>
+  <xs:element name="define-assembly-extension" type="m:extensionType" abstract="true"/>
+  <xs:element name="define-field-extension" type="m:extensionType" abstract="true"/>
+  <xs:element name="define-flag-extension" type="m:extensionType" abstract="true"/>
+  <xs:element name="assembly-extension" type="m:extensionType" abstract="true"/>
+  <xs:element name="field-extension" type="m:extensionType" abstract="true"/>
+  <xs:element name="flag-extension" type="m:extensionType" abstract="true"/>
+  
+  <xs:complexType name="extensionType">
+<!--    <xs:attribute name="name" type="xs:anyURI" use="required"/>
+-->  </xs:complexType>
 
   <xs:element name="define-assembly">
     <xs:annotation>
@@ -57,8 +75,14 @@
           </xs:complexType>
         </xs:element>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"
-        />
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
+        <xs:element name="extensions" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="m:define-assembly-extension" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:sequence>
       <xs:attribute name="name" use="required" type="xs:NCName"/>
       <xs:attribute name="module" type="xs:anyURI"/>
@@ -83,8 +107,14 @@
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:flag"/>
         <xs:element minOccurs="0" ref="m:allowed-values"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"
-        />
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
+        <xs:element name="extensions" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="m:define-field-extension" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:sequence>
       <xs:attribute name="as-type" type="m:field-types" default="string"/>
       <!-- TODO: change "collapsible" to "in-json-collapse" or something similar -->
@@ -96,7 +126,12 @@
 
   <xs:element name="json-key">
     <xs:annotation>
-      <xs:documentation>In the XML, produces an attribute with the given name, whose value is used as a key value (aka object property name) in the JSON, enabling objects to be 'lifted' out of arrays when such values are distinct. Implies that siblings will never share values. Overloading with datatype 'ID' and naming the key 'id' is legitimate and useful. Even without ID validation, uniqueness of these values among siblings is validable.</xs:documentation>
+      <xs:documentation>In the XML, produces an attribute with the given name, whose value is used
+        as a key value (aka object property name) in the JSON, enabling objects to be 'lifted' out
+        of arrays when such values are distinct. Implies that siblings will never share values.
+        Overloading with datatype 'ID' and naming the key 'id' is legitimate and useful. Even
+        without ID validation, uniqueness of these values among siblings is
+        validable.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:attribute name="flag-name" type="xs:NCName"/>
@@ -106,11 +141,15 @@
 
   <xs:element name="group-as">
     <xs:annotation>
-      <xs:documentation>When a given referenced field or assembly must be wrapped in an outer grouping, these settings apply, including a name for the group, and how to express the grouping in the respective formats. Not necessary when a field or assembly has max-occurs='1'</xs:documentation>
+      <xs:documentation>When a given referenced field or assembly must be wrapped in an outer
+        grouping, these settings apply, including a name for the group, and how to express the
+        grouping in the respective formats. Not necessary when a field or assembly has
+        max-occurs='1'</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:attribute name="name" type="xs:NCName" use="required"/>
-      <xs:attribute name="in-json" type="m:json-group-behavior" use="optional" default="SINGLETON_OR_ARRAY">
+      <xs:attribute name="in-json" type="m:json-group-behavior" use="optional"
+        default="SINGLETON_OR_ARRAY">
         <xs:annotation>
           <xs:documentation>How to represent a grouping in JSON</xs:documentation>
         </xs:annotation>
@@ -122,7 +161,7 @@
       </xs:attribute>
     </xs:complexType>
   </xs:element>
-  
+
   <xs:simpleType name="json-group-behavior">
     <xs:restriction base="xs:string">
       <xs:enumeration value="ARRAY">
@@ -132,12 +171,15 @@
       </xs:enumeration>
       <xs:enumeration value="SINGLETON_OR_ARRAY">
         <xs:annotation>
-          <xs:documentation>Produce a singleton for a single member (field or assembly) or an array for multiple members</xs:documentation>
+          <xs:documentation>Produce a singleton for a single member (field or assembly) or an array
+            for multiple members</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
       <xs:enumeration value="BY_KEY">
         <xs:annotation>
-          <xs:documentation>For any group (one or more members) produce an object with properties for each member, using a designated flag for their key (label) values, which must be distinct</xs:documentation>
+          <xs:documentation>For any group (one or more members) produce an object with properties
+            for each member, using a designated flag for their key (label) values, which must be
+            distinct</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
     </xs:restriction>
@@ -187,8 +229,14 @@
         <xs:element minOccurs="1" ref="m:description"/>
         <xs:element minOccurs="0" ref="m:allowed-values"/>
         <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:remarks"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"
-        />
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
+        <xs:element name="extensions" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="m:define-flag-extension" maxOccurs="unbounded"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:sequence>
       <xs:attribute name="name" use="required" type="xs:NCName"/>
       <!-- datatype should default to 'string' -->
@@ -202,7 +250,8 @@
       <xs:documentation>A formal name for the data construct, to be presented in documentation. It
         is permissible for a formal name to provide nothing but an expanson of what is already given
         by a tag (for example, this element could have formal name "Formal name") but it should at
-        the very least confirm the intended semantics for the user, not confuse them.</xs:documentation>
+        the very least confirm the intended semantics for the user, not confuse
+        them.</xs:documentation>
     </xs:annotation>
   </xs:element>
   <xs:element name="namespace" type="xs:anyURI">
@@ -236,8 +285,8 @@
   </xs:element>
   <xs:element name="remarks">
     <xs:annotation>
-      <xs:documentation>Any explanatory or helpful information to be provided in the
-      documentation of an assembly, field or flag.</xs:documentation>
+      <xs:documentation>Any explanatory or helpful information to be provided in the documentation
+        of an assembly, field or flag.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
@@ -245,7 +294,8 @@
       </xs:sequence>
       <xs:attribute name="class" type="xs:NMTOKENS">
         <xs:annotation>
-          <xs:documentation>Mark as 'XML' for XML-only or 'JSON' for JSON-only remarks.</xs:documentation>
+          <xs:documentation>Mark as 'XML' for XML-only or 'JSON' for JSON-only
+            remarks.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="module" type="xs:anyURI"/>
@@ -253,7 +303,8 @@
   </xs:element>
   <xs:element name="schema-name" type="xs:string">
     <xs:annotation>
-      <xs:documentation>The name of the information model to be represented by derived schemas.</xs:documentation>
+      <xs:documentation>The name of the information model to be represented by derived
+        schemas.</xs:documentation>
     </xs:annotation>
   </xs:element>
   <xs:element name="schema-version" type="xs:string">
@@ -289,24 +340,34 @@
         <xs:element minOccurs="0" ref="m:group-as"/>
         <xs:element minOccurs="0" ref="m:flag"/>
         <xs:element minOccurs="0" ref="m:remarks"/>
+        <xs:element name="extensions" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="m:assembly-extension" maxOccurs="unbounded"/>  
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:sequence>
       <xs:attribute name="ref" use="required" type="xs:NCName"/>
       <xs:attribute name="min-occurs" type="xs:nonNegativeInteger" default="0">
         <xs:annotation>
-          <xs:documentation>Minimum occurrence of assemblies within a valid model. The default value is 0, for an optional occurrence.</xs:documentation>
+          <xs:documentation>Minimum occurrence of assemblies within a valid model. The default value
+            is 0, for an optional occurrence.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="max-occurs"
-        type="m:natural-number-or-unbounded" default="1">
+      <xs:attribute name="max-occurs" type="m:natural-number-or-unbounded" default="1">
         <xs:annotation>
-          <xs:documentation>Maximum occurrence of assemblies within a valid model. The default value is 1, for a single occurrence. 'unbounded' permits any number of assemblies of the designated type.</xs:documentation>
+          <xs:documentation>Maximum occurrence of assemblies within a valid model. The default value
+            is 1, for a single occurrence. 'unbounded' permits any number of assemblies of the
+            designated type.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
     </xs:complexType>
   </xs:element>
   <xs:element name="field">
     <xs:annotation>
-      <xs:documentation>Referencing a field definition to include a field or fields of a given type in a model.</xs:documentation>
+      <xs:documentation>Referencing a field definition to include a field or fields of a given type
+        in a model.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
@@ -316,34 +377,46 @@
         <!-- TODO: Allows for constraints on the referenced fields flags -->
         <xs:element minOccurs="0" maxOccurs="unbounded" name="flag" type="m:flag-constraint"/>
         <xs:element minOccurs="0" ref="m:remarks"/>
+        <xs:element name="extensions" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="m:field-extension" maxOccurs="unbounded"/>  
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:sequence>
       <xs:attribute name="ref" use="required" type="xs:NCName"/>
       <xs:attribute name="min-occurs" type="xs:nonNegativeInteger" default="0">
         <xs:annotation>
-          <xs:documentation>Minimum occurrence of assemblies within a valid model. The default value is 0, for an optional occurrence.</xs:documentation>
+          <xs:documentation>Minimum occurrence of assemblies within a valid model. The default value
+            is 0, for an optional occurrence.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
-      <xs:attribute name="max-occurs"
-        type="m:natural-number-or-unbounded" default="1">
+      <xs:attribute name="max-occurs" type="m:natural-number-or-unbounded" default="1">
         <xs:annotation>
-          <xs:documentation>Maximum occurrence of assemblies within a valid model. The default value is 1, for a single occurrence. 'unbounded' permits any number of assemblies of the designated type.</xs:documentation>
+          <xs:documentation>Maximum occurrence of assemblies within a valid model. The default value
+            is 1, for a single occurrence. 'unbounded' permits any number of assemblies of the
+            designated type.</xs:documentation>
         </xs:annotation>
       </xs:attribute>
       <xs:attribute name="in-xml" default="WITH_WRAPPER">
         <xs:annotation>
-          <xs:documentation>A field with assigned datatype 'markup-multiline' may be designated for representation with or without a containing (wrapper) element
-            in XML.</xs:documentation>
+          <xs:documentation>A field with assigned datatype 'markup-multiline' may be designated for
+            representation with or without a containing (wrapper) element in XML.</xs:documentation>
         </xs:annotation>
         <xs:simpleType>
           <xs:restriction base="xs:string">
             <xs:enumeration value="WITH_WRAPPER">
               <xs:annotation>
-                <xs:documentation>Any paragraph or block contents of a markup-multiline field will be represented with a containing (wrapper) element in the XML.</xs:documentation>
+                <xs:documentation>Any paragraph or block contents of a markup-multiline field will
+                  be represented with a containing (wrapper) element in the XML.</xs:documentation>
               </xs:annotation>
             </xs:enumeration>
             <xs:enumeration value="UNWRAPPED">
               <xs:annotation>
-                <xs:documentation>With in-xml='UNWRAPPED', a field contents will be represented in the XML with no wrapper, so the field will be implicit. Among sibling fields in a given model, only one of them may be designated as UNWRAPPED.</xs:documentation>
+                <xs:documentation>With in-xml='UNWRAPPED', a field contents will be represented in
+                  the XML with no wrapper, so the field will be implicit. Among sibling fields in a
+                  given model, only one of them may be designated as UNWRAPPED.</xs:documentation>
               </xs:annotation>
             </xs:enumeration>
           </xs:restriction>
@@ -415,6 +488,13 @@
         <xs:element minOccurs="0" ref="m:description"/>
         <xs:element minOccurs="0" ref="m:remarks"/>
         <xs:element minOccurs="0" ref="m:allowed-values"/>
+        <xs:element name="extensions" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="m:flag-extension" maxOccurs="unbounded"/>  
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:sequence>
       <xs:attribute name="as-type" type="m:simple-datatypes"/>
       <xs:attribute name="name" type="xs:NCName"/>
@@ -440,7 +520,8 @@
   </xs:complexType>
   <xs:element name="choice">
     <xs:annotation>
-      <xs:documentation>Within a model, indicates that only one of a set of fields or assemblies, referenced in the choice, may occur in valid instances.</xs:documentation>
+      <xs:documentation>Within a model, indicates that only one of a set of fields or assemblies,
+        referenced in the choice, may occur in valid instances.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:choice maxOccurs="unbounded">
@@ -471,36 +552,36 @@
   <xs:element name="augment">
   	<!-- TODO: What is this? -->
     <xs:annotation>
-      <xs:documentation>To augment a definition with localized documentation, when a definition from a separate metaschema module is used.</xs:documentation>
+      <xs:documentation>To augment a definition with localized documentation, when a definition from
+        a separate metaschema module is used.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
         <xs:element minOccurs="0" ref="m:formal-name"/>
         <xs:element minOccurs="0" ref="m:description"/>
         <xs:element minOccurs="0" ref="m:remarks"/>
-        <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"
-        />
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="m:example"/>
       </xs:sequence>
       <xs:attribute name="name" use="required" type="xs:NCName"/>
     </xs:complexType>
   </xs:element>
-  
+
   <xs:simpleType name="simple-datatypes">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="boolean" />
-      <xs:enumeration value="string" />
-      <xs:enumeration value="NCName" />
-      <xs:enumeration value="decimal" />
+      <xs:enumeration value="boolean"/>
+      <xs:enumeration value="string"/>
+      <xs:enumeration value="NCName"/>
+      <xs:enumeration value="decimal"/>
       <!-- Not supporting float or double -->
       <!--<xs:enumeration value="float" />
       <xs:enumeration value="double" />-->
-      <xs:enumeration value="integer" />
+      <xs:enumeration value="integer"/>
       <xs:enumeration value="nonNegativeInteger"/>
       <xs:enumeration value="positiveInteger"/>
       <xs:enumeration value="dateTime"/>
       <xs:enumeration value="date"/>
       <xs:enumeration value="base64Binary"/>
-      
+
       <!-- specialized datatypes -->
       <xs:enumeration value="dateTime-with-timezone"/>
       <xs:enumeration value="date-with-timezone"/>
@@ -511,14 +592,14 @@
       <xs:enumeration value="ip-v6-address"/>
       <xs:enumeration value="uri"/>
       <xs:enumeration value="uri-reference"/>
-    </xs:restriction>   
+    </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:simpleType name="field-types">
     <xs:union memberTypes="m:simple-datatypes">
       <xs:simpleType>
         <xs:restriction base="xs:string">
-          <xs:enumeration value="empty" />
+          <xs:enumeration value="empty"/>
           <xs:enumeration value="markup-line"/>
           <xs:enumeration value="markup-multiline"/>
         </xs:restriction>
