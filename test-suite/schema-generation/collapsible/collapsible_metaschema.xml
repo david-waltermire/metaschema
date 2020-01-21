@@ -18,6 +18,9 @@
       <field ref="prop" min-occurs="1" max-occurs="unbounded">
         <group-as name="props"/>
       </field>
+      <field ref="prop2" min-occurs="1" max-occurs="unbounded">
+        <group-as name="prop2s"/>
+      </field>
     </model>
   </define-assembly>
 
@@ -28,5 +31,10 @@
       <formal-name>A simple flag</formal-name>
       <description>A simpleflag</description>
     </flag>
+  </define-field>
+
+  <define-field name="prop2" as-type="string" collapsible="yes">
+    <formal-name>prop</formal-name>
+    <description>prop field</description>
   </define-field>
 </METASCHEMA>

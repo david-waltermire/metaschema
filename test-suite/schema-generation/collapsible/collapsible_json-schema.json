@@ -19,9 +19,19 @@
               "minItems": 2
             }
           ]
+        },
+        "prop2s": {
+          "anyOf": [
+            {"$ref": "#/definitions/prop2"},
+            {
+              "type": "array",
+              "items": {"$ref": "#/definitions/prop2"},
+              "minItems": 2
+            }
+          ]
         }
       },
-      "required": ["props"],
+      "required": ["props", "prop2s"],
       "additionalProperties": false
     },
     "prop": {
@@ -48,6 +58,12 @@
       },
       "required": ["STRVALUE"],
       "additionalProperties": false
+    },
+    "prop2": {
+      "title": "prop",
+      "description": "prop field",
+      "$id": "#/definitions/prop2",
+      "type": "string",
     }
   },
   "properties": {

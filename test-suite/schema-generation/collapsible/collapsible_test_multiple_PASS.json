@@ -9,6 +9,7 @@
         "name": "name2",
         "STRVALUE": [ "value2", "value4" ]
       }
-    ]
+    ],
+    "prop2s": [ "value1", "value3" ]
   }
 }
