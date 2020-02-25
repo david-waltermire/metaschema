@@ -14,7 +14,7 @@
                     <xs:sequence>
                         <xs:element name="java" minOccurs="0">
                             <xs:complexType>
-                                <xs:attribute name="package-name" type="b:packageName"/>
+                                <xs:attribute name="package-name" type="b:JavaPackageName"/>
                             </xs:complexType>
                         </xs:element>
                     </xs:sequence>
@@ -30,10 +30,10 @@
                         <xs:element name="java" minOccurs="0">
                             <xs:complexType>
                                 <xs:sequence>
-                                    <xs:element name="interface-name" type="b:qualifiedClassName" minOccurs="0" maxOccurs="unbounded"/>
+                                    <xs:element name="interface-name" type="b:JavaQualifiedClassName" minOccurs="0" maxOccurs="unbounded"/>
                                 </xs:sequence>
-                                <xs:attribute name="class-name" type="b:className"/>
-                                <xs:attribute name="base-class-name" type="b:qualifiedClassName"/>
+                                <xs:attribute name="class-name" type="b:JavaClassName"/>
+                                <xs:attribute name="base-class-name" type="b:JavaQualifiedClassName"/>
                             </xs:complexType>
                         </xs:element>
                     </xs:sequence>
@@ -49,10 +49,10 @@
                         <xs:element name="java" minOccurs="0">
                             <xs:complexType>
                                 <xs:sequence>
-                                    <xs:element name="interface-name" type="b:qualifiedClassName" minOccurs="0" maxOccurs="unbounded"/>
+                                    <xs:element name="interface-name" type="b:JavaQualifiedClassName" minOccurs="0" maxOccurs="unbounded"/>
                                 </xs:sequence>
-                                <xs:attribute name="class-name" type="b:className"/>
-                                <xs:attribute name="base-class-name" type="b:qualifiedClassName"/>
+                                <xs:attribute name="class-name" type="b:JavaClassName"/>
+                                <xs:attribute name="base-class-name" type="b:JavaQualifiedClassName"/>
                             </xs:complexType>
                         </xs:element>
                     </xs:sequence>
@@ -60,20 +60,20 @@
             </xs:complexContent>
         </xs:complexType>
     </xs:element>
-    
-    <xs:simpleType name="packageName">
+ 
+    <xs:simpleType name="JavaPackageName">
         <xs:restriction base="xs:string">
             <xs:pattern value="[a-z][a-z0-9_]*(\.[a-z0-9_]+)+[0-9a-z_]"/>
         </xs:restriction>
     </xs:simpleType>
     
-    <xs:simpleType name="className">
+    <xs:simpleType name="JavaClassName">
         <xs:restriction base="xs:string">
             <xs:pattern value="[\p{L}_\p{Sc}][\p{L}\p{N}_\p{Sc}]*"/>
         </xs:restriction>
     </xs:simpleType>
     
-    <xs:simpleType name="qualifiedClassName">
+    <xs:simpleType name="JavaQualifiedClassName">
         <xs:restriction base="xs:string">
             <xs:pattern value="[\p{L}_\p{Sc}][\p{L}\p{N}_\p{Sc}]*.[\p{L}_\p{Sc}][\p{L}\p{N}_\p{Sc}]*"/>
         </xs:restriction>
