@@ -603,19 +603,19 @@
 
   <xs:simpleType name="ExtensibleEnumType">
     <xs:restriction base="TokenDatatype">
+      <xs:enumeration value="none">
+        <xs:annotation>
+          <xs:documentation>If an allowed-value constraint matching the @target has allow-other="no", then there can be no other matching allowed-value constraint for the same target. This is the least permissive option.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
       <xs:enumeration value="model">
         <xs:annotation>
-          <xs:documentation>Can be extended by constraints within the same model.</xs:documentation>
+          <xs:documentation>All allowed-values constraints declared within a Metaschema model matching the same @target can be combined. If a matching constraint within the model has allow-other="no", then constraints declared externally from the model are not allowed.</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
       <xs:enumeration value="external">
         <xs:annotation>
-          <xs:documentation>Can be extended by external constraints.</xs:documentation>
-        </xs:annotation>
-      </xs:enumeration>
-      <xs:enumeration value="none">
-        <xs:annotation>
-          <xs:documentation>Cannot be extended.</xs:documentation>
+          <xs:documentation>All allowed-values constraints, declared within the model and externally through an extension, that match the same @target can be combined. This is the most permissive option.</xs:documentation>
         </xs:annotation>
       </xs:enumeration>
     </xs:restriction>
