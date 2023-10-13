@@ -152,10 +152,13 @@
 
   <xs:group name="DefinitionMetadataGroup">
     <xs:sequence>
-      <xs:element name="formal-name" type="StringDatatype" minOccurs="0">
-        <xs:annotation>
-          <xs:documentation>A formal name for the data construct, to be presented in documentation.</xs:documentation>
-        </xs:annotation>
+      <xs:element name="formal-name" minOccurs="0">
+        <xs:simpleType>
+          <xs:annotation>
+            <xs:documentation>A formal name for the data construct, to be presented in documentation.</xs:documentation>
+          </xs:annotation>
+          <xs:restriction base="StringDatatype"/>
+        </xs:simpleType>
       </xs:element>
       <xs:element name="description" type="MarkupLineDatatype" minOccurs="0">
         <xs:annotation>
@@ -444,7 +447,6 @@
     </xs:annotation>
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
-      <xs:element name="use-name" type="ModelNameType" minOccurs="0"/>
       <xs:element name="constraint" minOccurs="0" type="DefineFlagConstraintsType"/>
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
       <xs:element name="example" type="ExampleType" minOccurs="0" maxOccurs="unbounded"/>
@@ -454,7 +456,7 @@
     <xs:attribute name="required" type="YesNoType" default="no"/>
     <xs:attributeGroup ref="DeprecationAttributeGroup"/>
   </xs:complexType>
-  
+
   <xs:simpleType name="JsonBaseUriType">
     <xs:annotation>
       <xs:documentation>The JSON Base URI is nominal base URI assigned to a JSON Schema instance expressing the model defined by this metaschema.</xs:documentation>
