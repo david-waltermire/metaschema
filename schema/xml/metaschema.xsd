@@ -70,7 +70,7 @@
 
   <xs:complexType name="MetaschemaImportType">
     <xs:annotation>
-      <xs:documentation>Imports a set of Metaschema definitions from an out-of-line resource, supporting reuse of common information structures.</xs:documentation>
+      <xs:documentation>Imports a set of Metaschema modules from an out-of-line resource, supporting reuse of common information structures.</xs:documentation>
     </xs:annotation>
     <xs:attribute name="href" type="URIReferenceDatatype" use="required">
       <xs:annotation>
@@ -188,21 +188,21 @@
     </xs:sequence>
   </xs:group>
 
+  <xs:complexType name="UseNameType">
+    <xs:simpleContent>
+      <xs:extension base="ModelNameType">
+        <xs:attribute name="index" use="optional" type="ModelIndexType"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  
 
   <xs:group name="UseNamingGroup">
     <xs:annotation>
       <xs:documentation>Common definition attributes that support instance naming.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
-      <xs:element name="use-name" minOccurs="0">
-        <xs:complexType>
-          <xs:simpleContent>
-            <xs:extension base="ModelNameType">
-              <xs:attribute name="index" use="optional" type="ModelIndexType"/>
-            </xs:extension>
-          </xs:simpleContent>
-        </xs:complexType>
-      </xs:element>
+      <xs:element name="use-name" type="UseNameType" minOccurs="0"/>
     </xs:sequence>
   </xs:group>
 
@@ -217,13 +217,24 @@
         <xs:group ref="RootDefinitionNamingGroup"/>
         <xs:group ref="UseNamingGroup"/>
       </xs:choice>
-      <xs:element name="json-key" type="JsonKeyType" minOccurs="0"/>
+      <xs:element name="json-key" type="JsonKeyType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>DEPRECATED: Use group-as/json-key instead.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="flag" type="FlagReferenceType"/>
         <xs:element name="define-flag" type="InlineFlagDefinitionType" minOccurs="0" maxOccurs="unbounded"/>
       </xs:choice>
       <xs:element name="model" type="AssemblyModelType" minOccurs="0"/>
-      <xs:element name="constraint" type="DefineAssemblyConstraintsType" minOccurs="0"/>
+      <xs:choice minOccurs="0">
+        <xs:element name="constraints" type="DefineAssemblyConstraintsType"/>
+        <xs:element name="constraint" type="DefineAssemblyConstraintsType">
+          <xs:annotation>
+            <xs:documentation>DEPRECATED: Use constraints instead.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
       <xs:element name="example" type="ExampleType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
@@ -240,6 +251,7 @@
         <xs:element name="define-assembly" type="InlineAssemblyDefinitionType"/>
         <xs:element name="define-field" type="InlineFieldDefinitionType"/>
         <xs:element name="choice" type="ChoiceType"/>
+        <xs:element name="choice-group" type="GroupedChoiceType"/>
       </xs:choice>
       <xs:element name="any" type="AnyType" minOccurs="0"/>
     </xs:sequence>
@@ -277,13 +289,24 @@
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
       <xs:group ref="UseNamingGroup"/>
-      <xs:element name="json-key" type="JsonKeyType" minOccurs="0"/>
+      <xs:element name="json-key" type="JsonKeyType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>DEPRECATED: Use group-as/json-key instead.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:group ref="JsonValueKeyChoiceGroup"/>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="flag" type="FlagReferenceType"/>
         <xs:element name="define-flag" type="InlineFlagDefinitionType" minOccurs="0" maxOccurs="unbounded"/>
       </xs:choice>
-      <xs:element name="constraint" type="DefineFieldConstraintsType" minOccurs="0"/>
+      <xs:choice minOccurs="0">
+        <xs:element name="constraints" type="DefineFieldConstraintsType"/>
+        <xs:element name="constraint" type="DefineFieldConstraintsType">
+          <xs:annotation>
+            <xs:documentation>DEPRECATED: Use constraints instead.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
       <xs:element name="example" type="ExampleType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
@@ -303,7 +326,14 @@
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
       <xs:group ref="UseNamingGroup"/>
-      <xs:element name="constraint" minOccurs="0" type="DefineFlagConstraintsType"/>
+      <xs:choice minOccurs="0">
+        <xs:element name="constraints" type="DefineFlagConstraintsType"/>
+        <xs:element name="constraint" type="DefineFlagConstraintsType">
+          <xs:annotation>
+            <xs:documentation>DEPRECATED: Use constraints instead.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
       <xs:element name="example" type="ExampleType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
@@ -321,15 +351,25 @@
     </xs:annotation>
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
-      <xs:element name="json-key" type="JsonKeyType" minOccurs="0"/>
-      <xs:group ref="JsonValueKeyChoiceGroup"/>
+      <xs:element name="json-key" type="JsonKeyType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>DEPRECATED: Use group-as/json-key instead.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element name="group-as" type="GroupAsType" minOccurs="0"/>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="flag" type="FlagReferenceType"/>
         <xs:element name="define-flag" type="InlineFlagDefinitionType" minOccurs="0" maxOccurs="unbounded"/>
       </xs:choice>
       <xs:element name="model" minOccurs="0" type="AssemblyModelType"/>
-      <xs:element name="constraint" type="DefineAssemblyConstraintsType" minOccurs="0"/>
+      <xs:choice minOccurs="0">
+        <xs:element name="constraints" type="DefineAssemblyConstraintsType"/>
+        <xs:element name="constraint" type="DefineAssemblyConstraintsType">
+          <xs:annotation>
+            <xs:documentation>DEPRECATED: Use constraints instead.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
       <xs:element name="example" type="ExampleType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
@@ -346,14 +386,25 @@
     </xs:annotation>
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
-      <xs:element name="json-key" type="JsonKeyType" minOccurs="0"/>
+      <xs:element name="json-key" type="JsonKeyType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>DEPRECATED: Use group-as/json-key instead.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:group ref="JsonValueKeyChoiceGroup"/>
       <xs:element name="group-as" type="GroupAsType" minOccurs="0"/>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="flag" type="FlagReferenceType"/>
         <xs:element name="define-flag" type="InlineFlagDefinitionType" minOccurs="0" maxOccurs="unbounded"/>
       </xs:choice>
-      <xs:element name="constraint" type="DefineFieldConstraintsType" minOccurs="0"/>
+      <xs:choice minOccurs="0">
+        <xs:element name="constraints" type="DefineFieldConstraintsType"/>
+        <xs:element name="constraint" type="DefineFieldConstraintsType">
+          <xs:annotation>
+            <xs:documentation>DEPRECATED: Use constraints instead.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
       <xs:element name="example" type="ExampleType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
@@ -376,7 +427,14 @@
     </xs:annotation>
     <xs:sequence>
       <xs:group ref="DefinitionMetadataGroup"/>
-      <xs:element name="constraint" minOccurs="0" type="DefineFlagConstraintsType"/>
+      <xs:choice minOccurs="0">
+        <xs:element name="constraints" type="DefineFlagConstraintsType"/>
+        <xs:element name="constraint" type="DefineFlagConstraintsType">
+          <xs:annotation>
+            <xs:documentation>DEPRECATED: Use constraints instead.</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
       <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
       <xs:element name="example" type="ExampleType" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
@@ -530,7 +588,7 @@
   <xs:simpleType name="MetaschemaPathType">
     <xs:restriction base="StringDatatype"/>
   </xs:simpleType>
-  
+ 
   <xs:complexType name="ChoiceType">
     <xs:annotation>
       <xs:documentation>Within a model, indicates that only one of a set of fields or assemblies, referenced in the choice, may occur in valid instances.</xs:documentation>
@@ -542,6 +600,121 @@
       <xs:element name="define-field" type="InlineFieldDefinitionType"/>
     </xs:choice>
   </xs:complexType>
+  
+  <xs:complexType name="GroupedChoiceType">
+    <xs:annotation>
+      <xs:documentation>Within a model, indicates that only one of a set of fields or assemblies, referenced in the choice, may occur in valid instances.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="json-key" type="JsonKeyType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>DEPRECATED: Use group-as/json-key instead.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="group-as" type="GroupAsType" minOccurs="0"/>
+      <xs:element name="descriminator" minOccurs="0">
+        <xs:complexType>
+          <xs:attribute name="in-json" type="TokenDatatype" use="required"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="assembly" type="GroupedAssemblyReferenceType"/>
+        <xs:element name="field" type="GroupedFieldReferenceType"/>
+        <xs:element name="define-assembly" type="GroupedInlineAssemblyDefinitionType"/>
+        <xs:element name="define-field" type="GroupedInlineFieldDefinitionType"/>
+      </xs:choice>
+    </xs:sequence>
+    <xs:attributeGroup ref="CardinalitySpecificationGroup"/>
+  </xs:complexType>
+  
+  <xs:complexType name="GroupedAssemblyReferenceType">
+    <xs:annotation>
+      <xs:documentation>Referencing an assembly definition to include an assembly or assemblies of a given type in a model.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:group ref="DefinitionMetadataGroup"/>
+      <xs:group ref="ChoiceUseNamingGroup"/>
+      <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="ref" use="required" type="ModelNameType"/>
+    <xs:attributeGroup ref="DeprecationAttributeGroup"/>
+  </xs:complexType>
+  
+  <xs:complexType name="GroupedFieldReferenceType">
+    <xs:annotation>
+      <xs:documentation>Referencing a field definition to include a field or fields of a given type in a model.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:group ref="DefinitionMetadataGroup"/>
+      <xs:group ref="ChoiceUseNamingGroup"/>
+      <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="ref" use="required" type="ModelNameType"/>
+    <xs:attribute name="default" type="StringDatatype"/>
+    <xs:attributeGroup ref="DeprecationAttributeGroup"/>
+  </xs:complexType>
+
+  <xs:complexType name="GroupedInlineAssemblyDefinitionType">
+    <xs:annotation>
+      <xs:documentation>In JSON, an object with a nominal string value (potentially with internal
+        inline - not fully structured - markup). In XML, an element with string or markup
+        content. A local definition describes and constrains the appearance of the field only in this (assembly) context.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:group ref="DefinitionMetadataGroup"/>
+      <xs:group ref="ChoiceUseNamingGroup"/>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="flag" type="FlagReferenceType"/>
+        <xs:element name="define-flag" type="InlineFlagDefinitionType" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:choice>
+      <xs:element name="model" minOccurs="0" type="AssemblyModelType"/>
+      <xs:element name="constraint" type="DefineAssemblyConstraintsType" minOccurs="0"/>
+      <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
+      <xs:element name="example" type="ExampleType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="DefinitionNamingGroup"/>
+    <xs:attributeGroup ref="DeprecationAttributeGroup"/>
+  </xs:complexType>
+  
+  <xs:complexType name="GroupedInlineFieldDefinitionType">
+    <xs:annotation>
+      <xs:documentation>In JSON, an object with a nominal string value (potentially with internal
+        inline - not fully structured - markup). In XML, an element with string or markup
+        content. A local definition describes and constrains the appearance of the field only in this (assembly) context.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:group ref="DefinitionMetadataGroup"/>
+      <xs:group ref="ChoiceUseNamingGroup"/>
+      <xs:group ref="JsonValueKeyChoiceGroup"/>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="flag" type="FlagReferenceType"/>
+        <xs:element name="define-flag" type="InlineFlagDefinitionType" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:choice>
+      <xs:element name="constraint" type="DefineFieldConstraintsType" minOccurs="0"/>
+      <xs:element name="remarks" type="RemarksType" minOccurs="0"/>
+      <xs:element name="example" type="ExampleType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attributeGroup ref="FieldValueAttributeGroup"/>
+    <xs:attribute name="collapsible" type="YesNoType" default="no"/>
+    <xs:attributeGroup ref="CardinalitySpecificationGroup"/>
+    <xs:attributeGroup ref="DefinitionNamingGroup"/>
+    <xs:attribute name="in-xml" type="InXmlWrappedType" default="WRAPPED">
+      <xs:annotation>
+        <xs:documentation>A field with assigned datatype 'markup-multiline' may be designated for representation with or without a containing (wrapper) element
+          in XML.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attributeGroup ref="DeprecationAttributeGroup"/>
+  </xs:complexType>
+  <xs:group name="ChoiceUseNamingGroup">
+    <xs:annotation>
+      <xs:documentation>Common definition attributes that support instance naming.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="use-name" type="UseNameType" minOccurs="0"/>
+      <xs:element name="descriminator-value" type="TokenDatatype" minOccurs="0"/>
+    </xs:sequence>
+  </xs:group>
   
   <xs:complexType name="AnyType">
     <xs:annotation>
@@ -570,7 +743,7 @@
     <xs:annotation>
       <xs:documentation>In the XML, produces an attribute with the given name, whose value is used as a key value (aka object property name) in the JSON, enabling objects to be 'lifted' out of arrays when such values are distinct. Implies that siblings will never share values. Overloading with datatype 'ID' and naming the key 'id' is legitimate and useful. Even without ID validation, uniqueness of these values among siblings can be validated.</xs:documentation>
     </xs:annotation>
-    <xs:attribute name="flag-ref" type="ModelNameType"/>
+    <xs:attribute name="flag-ref" type="ModelNameType" use="required"/>
     <!-- do not have to flag if required; it always will be <xs:attribute name="required" type="xs:NCName"/>-->
   </xs:complexType>
   
@@ -578,6 +751,9 @@
     <xs:annotation>
       <xs:documentation>When a given referenced field or assembly must be wrapped in an outer grouping, these settings apply, including a name for the group, and how to express the grouping in the respective formats. Not necessary when a field or assembly has max-occurs='1'</xs:documentation>
     </xs:annotation>
+    <xs:sequence>
+      <xs:element name="json-key" type="JsonKeyType" minOccurs="0"/>
+    </xs:sequence>
     <xs:attribute name="name" type="ModelNameType" use="required"/>
     <xs:attribute name="in-json" type="JsonGroupAsBehaviorType" use="optional"
       default="SINGLETON_OR_ARRAY">
@@ -713,7 +889,6 @@
     <xs:attribute name="var" type="TokenDatatype" use="required"/>
     <xs:attribute name="expression" type="MetaschemaPathType" use="required"/>
   </xs:complexType>
-  
   
   <xs:attributeGroup name="CardinalitySpecificationGroup">
     <xs:attribute name="min-occurs" type="NonNegativeIntegerDatatype" default="0">
